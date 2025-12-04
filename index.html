@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>القدر الكوني - بوابة الأبراج والفلك</title>
+    <!-- Google Fonts: Cairo for Arabic text -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              cosmic: {
+                900: '#0f172a',
+                800: '#1e1b4b',
+                700: '#312e81',
+                gold: '#fbbf24',
+                accent: '#818cf8',
+              }
+            },
+            fontFamily: {
+              sans: ['Cairo', 'sans-serif'],
+              serif: ['Cairo', 'serif'],
+            },
+            animation: {
+              'spin-slow': 'spin 20s linear infinite',
+              'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+              'float': 'float 6s ease-in-out infinite',
+            },
+            keyframes: {
+              float: {
+                '0%, 100%': { transform: 'translateY(0)' },
+                '50%': { transform: 'translateY(-20px)' },
+              }
+            }
+          },
+        },
+      }
+    </script>
+    <style>
+      body {
+        background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%);
+        color: #e2e8f0;
+        overflow-x: hidden;
+        font-family: 'Cairo', sans-serif;
+        min-height: 100vh;
+        perspective: 1000px;
+        margin: 0;
+      }
+
+      /* Advanced Glassmorphism */
+      .glass-panel {
+        background: rgba(17, 25, 40, 0.6);
+        backdrop-filter: blur(20px) saturate(180%);
+        -webkit-backdrop-filter: blur(20px) saturate(180%);
+        border: 1px solid rgba(255, 255, 255, 0.125);
+        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+      }
+      
+      .glass-button {
+        background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .glass-button:hover {
+        background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.1) 100%);
+        border-color: rgba(255, 255, 255, 0.4);
+        transform: translateY(-2px);
+        box-shadow: 0 10px 15px rgba(0,0,0,0.2);
+      }
+
+      /* Parallax Stars */
+      #stars-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        pointer-events: none;
+      }
+      
+      .star {
+        position: absolute;
+        background: #fff;
+        border-radius: 50%;
+        opacity: 0;
+        animation: twinkle ease-in-out infinite;
+      }
+
+      .star.layer-1 { width: 1px; height: 1px; }
+      .star.layer-2 { width: 2px; height: 2px; box-shadow: 0 0 2px #fff; }
+      .star.layer-3 { width: 3px; height: 3px; box-shadow: 0 0 4px #fff, 0 0 8px #fbbf24; }
+
+      @keyframes twinkle {
+        0% { opacity: 0; transform: scale(0.3); }
+        50% { opacity: var(--star-opacity); transform: scale(1); }
+        100% { opacity: 0; transform: scale(0.3); }
+      }
+
+      /* Realistic Meteor */
+      .meteor {
+        position: absolute;
+        width: 2px;
+        height: 2px;
+        background: transparent;
+        opacity: 0;
+        z-index: -1;
+      }
+      
+      .meteor::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 120px;
+        height: 1px;
+        background: linear-gradient(90deg, rgba(255,255,255,1), rgba(255,255,255,0));
+      }
+
+      .meteor-animation {
+        animation: meteor-fall linear infinite;
+      }
+
+      @keyframes meteor-fall {
+        0% {
+          transform: translate(var(--start-x), var(--start-y)) rotate(215deg);
+          opacity: 1;
+        }
+        70% {
+          opacity: 1;
+        }
+        100% {
+          transform: translate(var(--end-x), var(--end-y)) rotate(215deg);
+          opacity: 0;
+        }
+      }
+
+      /* Scrollbar */
+      ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: rgba(15, 23, 42, 0.5); 
+      }
+      ::-webkit-scrollbar-thumb {
+        background: rgba(99, 102, 241, 0.5); 
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: rgba(99, 102, 241, 0.8); 
+      }
+      
+      /* Utilities */
+      .scrollbar-hide::-webkit-scrollbar {
+          display: none;
+      }
+      .scrollbar-hide {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react": "https://aistudiocdn.com/react@^19.2.1",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.1/",
+    "react/": "https://aistudiocdn.com/react@^19.2.1/",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.31.0",
+    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.555.0"
+  }
+}
+</script>
+</head>
+  <body>
+    <div id="root"></div>
+    <div id="stars-container"></div>
+    
+    <script type="module" src="./index.tsx"></script>
+
+    <script>
+      // Enhanced Star System
+      function initStars() {
+        const container = document.getElementById('stars-container');
+        const starCount = 200;
+        
+        // Static background stars with parallax layers
+        for (let i = 0; i < starCount; i++) {
+          const star = document.createElement('div');
+          // Random layer
+          const layer = Math.floor(Math.random() * 3) + 1;
+          star.className = `star layer-${layer}`;
+          
+          star.style.left = `${Math.random() * 100}%`;
+          star.style.top = `${Math.random() * 100}%`;
+          
+          const opacity = Math.random() * 0.7 + 0.3;
+          star.style.setProperty('--star-opacity', opacity);
+          
+          // Randomize animation timings
+          const duration = Math.random() * 3 + 2;
+          const delay = Math.random() * 5;
+          star.style.animationDuration = `${duration}s`;
+          star.style.animationDelay = `${delay}s`;
+          
+          container.appendChild(star);
+        }
+
+        // Meteor System - More random
+        const scheduleMeteor = () => {
+             const delay = Math.random() * 3000 + 1000; // 1 to 4 seconds
+             setTimeout(() => {
+                 createMeteor();
+                 scheduleMeteor();
+             }, delay);
+        }
+        scheduleMeteor();
+      }
+
+      function createMeteor() {
+        const container = document.getElementById('stars-container');
+        const meteor = document.createElement('div');
+        meteor.className = 'meteor meteor-animation';
+        
+        // Starting position (top-right area usually looks best for 215deg angle)
+        const startX = Math.random() * window.innerWidth + 100;
+        const startY = -100;
+        
+        // End position calculation based on angle
+        const angle = 215 * (Math.PI / 180);
+        const distance = window.innerWidth + 800;
+        const endX = startX + Math.cos(angle) * distance;
+        const endY = startY + Math.sin(angle) * distance;
+
+        meteor.style.setProperty('--start-x', `${startX}px`);
+        meteor.style.setProperty('--start-y', `${startY}px`);
+        meteor.style.setProperty('--end-x', `${endX}px`);
+        meteor.style.setProperty('--end-y', `${endY}px`);
+        
+        meteor.style.animationDuration = `${Math.random() * 1 + 0.8}s`;
+        
+        container.appendChild(meteor);
+        
+        // Clean up
+        setTimeout(() => {
+          if (meteor.parentNode) meteor.parentNode.removeChild(meteor);
+        }, 2000);
+      }
+
+      window.onload = initStars;
+    </script>
+  </body>
+</html>
