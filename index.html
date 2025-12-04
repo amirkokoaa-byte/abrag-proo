@@ -1,14 +1,16 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>القدر الكوني - بوابة الأبراج والفلك</title>
-    <!-- Google Fonts: Cairo for Arabic text -->
+    
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
     
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
@@ -43,6 +45,8 @@
         },
       }
     </script>
+
+    <!-- Styles -->
     <style>
       body {
         background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%);
@@ -54,7 +58,7 @@
         margin: 0;
       }
 
-      /* Advanced Glassmorphism */
+      /* Glassmorphism */
       .glass-panel {
         background: rgba(17, 25, 40, 0.6);
         backdrop-filter: blur(20px) saturate(180%);
@@ -106,7 +110,7 @@
         100% { opacity: 0; transform: scale(0.3); }
       }
 
-      /* Realistic Meteor */
+      /* Meteors */
       .meteor {
         position: absolute;
         width: 2px;
@@ -145,79 +149,65 @@
       }
 
       /* Scrollbar */
-      ::-webkit-scrollbar {
-        width: 8px;
-        height: 8px;
-      }
-      ::-webkit-scrollbar-track {
-        background: rgba(15, 23, 42, 0.5); 
-      }
-      ::-webkit-scrollbar-thumb {
-        background: rgba(99, 102, 241, 0.5); 
-        border-radius: 4px;
-      }
-      ::-webkit-scrollbar-thumb:hover {
-        background: rgba(99, 102, 241, 0.8); 
-      }
-      
-      /* Utilities */
-      .scrollbar-hide::-webkit-scrollbar {
-          display: none;
-      }
-      .scrollbar-hide {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
-      }
+      ::-webkit-scrollbar { width: 8px; height: 8px; }
+      ::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.5); }
+      ::-webkit-scrollbar-thumb { background: rgba(99, 102, 241, 0.5); border-radius: 4px; }
+      ::-webkit-scrollbar-thumb:hover { background: rgba(99, 102, 241, 0.8); }
+      .scrollbar-hide::-webkit-scrollbar { display: none; }
+      .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
-  <script type="importmap">
+
+    <!-- Import Map (Fixed) -->
+    <script type="importmap">
 {
   "imports": {
-    "react": "https://aistudiocdn.com/react@^19.2.1",
+    "react": "https://esm.sh/react@18.2.0",
+    "react-dom/client": "https://esm.sh/react-dom@18.2.0/client",
+    "@google/genai": "https://esm.sh/@google/genai@0.1.0",
+    "lucide-react": "https://esm.sh/lucide-react@0.294.0",
     "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.1/",
-    "react/": "https://aistudiocdn.com/react@^19.2.1/",
-    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.31.0",
-    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.555.0"
+    "react/": "https://aistudiocdn.com/react@^19.2.1/"
   }
 }
 </script>
+    
+    <!-- Babel for JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <!-- Critical Polyfill for @google/genai -->
+    <script>
+      window.process = window.process || { env: {} };
+      // IMPORTANT: Replace the empty string below with your valid Gemini API Key
+      window.process.env.API_KEY = ""; 
+    </script>
 </head>
-  <body>
+<body>
     <div id="root"></div>
     <div id="stars-container"></div>
-    
-    <script type="module" src="./index.tsx"></script>
 
+    <!-- Background Animation Script -->
     <script>
-      // Enhanced Star System
       function initStars() {
         const container = document.getElementById('stars-container');
         const starCount = 200;
         
-        // Static background stars with parallax layers
         for (let i = 0; i < starCount; i++) {
           const star = document.createElement('div');
-          // Random layer
           const layer = Math.floor(Math.random() * 3) + 1;
           star.className = `star layer-${layer}`;
-          
           star.style.left = `${Math.random() * 100}%`;
           star.style.top = `${Math.random() * 100}%`;
-          
           const opacity = Math.random() * 0.7 + 0.3;
           star.style.setProperty('--star-opacity', opacity);
-          
-          // Randomize animation timings
           const duration = Math.random() * 3 + 2;
           const delay = Math.random() * 5;
           star.style.animationDuration = `${duration}s`;
           star.style.animationDelay = `${delay}s`;
-          
           container.appendChild(star);
         }
 
-        // Meteor System - More random
         const scheduleMeteor = () => {
-             const delay = Math.random() * 3000 + 1000; // 1 to 4 seconds
+             const delay = Math.random() * 3000 + 1000;
              setTimeout(() => {
                  createMeteor();
                  scheduleMeteor();
@@ -230,33 +220,616 @@
         const container = document.getElementById('stars-container');
         const meteor = document.createElement('div');
         meteor.className = 'meteor meteor-animation';
-        
-        // Starting position (top-right area usually looks best for 215deg angle)
         const startX = Math.random() * window.innerWidth + 100;
         const startY = -100;
-        
-        // End position calculation based on angle
         const angle = 215 * (Math.PI / 180);
         const distance = window.innerWidth + 800;
         const endX = startX + Math.cos(angle) * distance;
         const endY = startY + Math.sin(angle) * distance;
-
         meteor.style.setProperty('--start-x', `${startX}px`);
         meteor.style.setProperty('--start-y', `${startY}px`);
         meteor.style.setProperty('--end-x', `${endX}px`);
         meteor.style.setProperty('--end-y', `${endY}px`);
-        
         meteor.style.animationDuration = `${Math.random() * 1 + 0.8}s`;
-        
         container.appendChild(meteor);
-        
-        // Clean up
         setTimeout(() => {
           if (meteor.parentNode) meteor.parentNode.removeChild(meteor);
         }, 2000);
       }
-
       window.onload = initStars;
     </script>
-  </body>
+
+    <!-- Main Application Script -->
+    <script type="text/babel" data-type="module">
+      import React, { useState, useEffect } from 'react';
+      import { createRoot } from 'react-dom/client';
+      import { GoogleGenAI } from "@google/genai";
+      import { Search, Info, Heart, Star, Calendar, Loader2, Sparkles, Moon, MoonStar } from 'lucide-react';
+
+      // --- TYPES & CONSTANTS ---
+
+      const ZodiacSign = {
+        Aries: "Aries",
+        Taurus: "Taurus",
+        Gemini: "Gemini",
+        Cancer: "Cancer",
+        Leo: "Leo",
+        Virgo: "Virgo",
+        Libra: "Libra",
+        Scorpio: "Scorpio",
+        Sagittarius: "Sagittarius",
+        Capricorn: "Capricorn",
+        Aquarius: "Aquarius",
+        Pisces: "Pisces"
+      };
+
+      const ZODIAC_DATA = [
+        { name: ZodiacSign.Aries, arabicName: "الحمل", dateRange: "Mar 21 - Apr 19", element: "Fire", arabicElement: "ناري" },
+        { name: ZodiacSign.Taurus, arabicName: "الثور", dateRange: "Apr 20 - May 20", element: "Earth", arabicElement: "أرضي" },
+        { name: ZodiacSign.Gemini, arabicName: "الجوزاء", dateRange: "May 21 - Jun 20", element: "Air", arabicElement: "هوائي" },
+        { name: ZodiacSign.Cancer, arabicName: "السرطان", dateRange: "Jun 21 - Jul 22", element: "Water", arabicElement: "مائي" },
+        { name: ZodiacSign.Leo, arabicName: "الأسد", dateRange: "Jul 23 - Aug 22", element: "Fire", arabicElement: "ناري" },
+        { name: ZodiacSign.Virgo, arabicName: "العذراء", dateRange: "Aug 23 - Sep 22", element: "Earth", arabicElement: "أرضي" },
+        { name: ZodiacSign.Libra, arabicName: "الميزان", dateRange: "Sep 23 - Oct 22", element: "Air", arabicElement: "هوائي" },
+        { name: ZodiacSign.Scorpio, arabicName: "العقرب", dateRange: "Oct 23 - Nov 21", element: "Water", arabicElement: "مائي" },
+        { name: ZodiacSign.Sagittarius, arabicName: "القوس", dateRange: "Nov 22 - Dec 21", element: "Fire", arabicElement: "ناري" },
+        { name: ZodiacSign.Capricorn, arabicName: "الجدي", dateRange: "Dec 22 - Jan 19", element: "Earth", arabicElement: "أرضي" },
+        { name: ZodiacSign.Aquarius, arabicName: "الدلو", dateRange: "Jan 20 - Feb 18", element: "Air", arabicElement: "هوائي" },
+        { name: ZodiacSign.Pisces, arabicName: "الحوت", dateRange: "Feb 19 - Mar 20", element: "Water", arabicElement: "مائي" },
+      ];
+
+      const Tab = {
+        FindSign: 'find',
+        Details: 'details',
+        Compatibility: 'match',
+        Horoscope: 'luck',
+        Age: 'age'
+      };
+
+      // --- HELPERS ---
+
+      const calculateAge = (birthDate) => {
+        const today = new Date();
+        let years = today.getFullYear() - birthDate.getFullYear();
+        let months = today.getMonth() - birthDate.getMonth();
+        let days = today.getDate() - birthDate.getDate();
+
+        if (months < 0 || (months === 0 && days < 0)) {
+          years--;
+          months += 12;
+        }
+
+        if (days < 0) {
+          const prevMonth = new Date(today.getFullYear(), today.getMonth() - 1, 0);
+          days += prevMonth.getDate();
+          months--;
+        }
+
+        return { years, months, days };
+      };
+
+      const getZodiacSign = (date) => {
+        const day = date.getDate();
+        const month = date.getMonth() + 1;
+
+        if ((month === 3 && day >= 21) || (month === 4 && day <= 19)) return ZodiacSign.Aries;
+        if ((month === 4 && day >= 20) || (month === 5 && day <= 20)) return ZodiacSign.Taurus;
+        if ((month === 5 && day >= 21) || (month === 6 && day <= 20)) return ZodiacSign.Gemini;
+        if ((month === 6 && day >= 21) || (month === 7 && day <= 22)) return ZodiacSign.Cancer;
+        if ((month === 7 && day >= 23) || (month === 8 && day <= 22)) return ZodiacSign.Leo;
+        if ((month === 8 && day >= 23) || (month === 9 && day <= 22)) return ZodiacSign.Virgo;
+        if ((month === 9 && day >= 23) || (month === 10 && day <= 22)) return ZodiacSign.Libra;
+        if ((month === 10 && day >= 23) || (month === 11 && day <= 21)) return ZodiacSign.Scorpio;
+        if ((month === 11 && day >= 22) || (month === 12 && day <= 21)) return ZodiacSign.Sagittarius;
+        if ((month === 12 && day >= 22) || (month === 1 && day <= 19)) return ZodiacSign.Capricorn;
+        if ((month === 1 && day >= 20) || (month === 2 && day <= 18)) return ZodiacSign.Aquarius;
+        return ZodiacSign.Pisces;
+      };
+
+      // --- SERVICES ---
+
+      // Initialize AI safely
+      const getAIClient = () => {
+         const key = window.process.env.API_KEY;
+         if (!key) return null;
+         return new GoogleGenAI({ apiKey: key });
+      };
+
+      const getArabicName = (sign) => {
+          return ZODIAC_DATA.find(z => z.name === sign)?.arabicName || sign;
+      }
+
+      const getDailyHoroscope = async (sign) => {
+        const ai = getAIClient();
+        if (!ai) return "الرجاء ضبط مفتاح API في الكود للحصول على التوقعات (Const API_KEY).";
+
+        try {
+          const arabicSign = getArabicName(sign);
+          const today = new Date().toLocaleDateString('ar-EG', { 
+            weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' 
+          });
+
+          const response = await ai.models.generateContent({
+            model: 'gemini-2.5-flash',
+            contents: `ابحث عن توقعات برج ${arabicSign} لليوم ${today} على الإنترنت.
+            بناءً على نتائج البحث، قم بصياغة "حظك اليوم" بطريقة مشوقة وغامضة.
+            المطلوب:
+            - تلخيص أهم التوقعات المهنية، العاطفية، والصحية لهذا اليوم.
+            - تقديم نصيحة فلكية واحدة مستندة إلى حركة الكواكب الحالية.
+            - لا تنسخ النصوص حرفياً، بل أعد صياغتها بأسلوب أدبي جذاب باللغة العربية.
+            - اجعل النص لا يقل عن 80 كلمة.`,
+            config: { tools: [{ googleSearch: {} }] }
+          });
+
+          let text = response.text || "النجوم محجوبة اليوم. حاول مرة أخرى لاحقاً.";
+          
+          const chunks = response.candidates?.[0]?.groundingMetadata?.groundingChunks;
+          if (chunks && chunks.length > 0) {
+              const sources = chunks
+                  .map((c) => c.web?.uri)
+                  .filter((u) => u)
+                  .filter((value, index, self) => self.indexOf(value) === index)
+                  .slice(0, 3)
+                  .map((u) => `• ${u}`)
+                  .join('\n');
+              if (sources) text += `\n\nالمصادر:\n${sources}`;
+          }
+          return text;
+        } catch (error) {
+          console.error("Gemini API Error:", error);
+          return "حدث خطأ في الاتصال بالكون. الرجاء التأكد من مفتاح API.";
+        }
+      };
+
+      const getDeepSignAnalysis = async (sign) => {
+        const ai = getAIClient();
+        if (!ai) return "الرجاء ضبط مفتاح API للكشف عن الحقائق العميقة.";
+
+        try {
+          const arabicSign = getArabicName(sign);
+          const response = await ai.models.generateContent({
+            model: 'gemini-2.5-flash',
+            contents: `قدم تحليلاً فلكياً عميقاً ومفصلاً لشخصية برج ${arabicSign} باللغة العربية.
+            المطلوب: 1. السمات الشخصية الجوهرية. 2. نقاط القوة الخفية. 3. الطبيعة العاطفية.
+            اكتب ما لا يقل عن 10 أسطر بأسلوب أدبي وعميق.`,
+          });
+          return response.text || "التحليل غير متاح حالياً.";
+        } catch (error) {
+          console.error("Gemini API Error:", error);
+          return "لم نتمكن من استرجاع بيانات النجوم.";
+        }
+      };
+
+      const getCompatibilityReport = async (sign1, sign2) => {
+        const ai = getAIClient();
+        if (!ai) return "الرجاء ضبط مفتاح API لحساب التوافق.";
+
+        try {
+          const s1 = getArabicName(sign1);
+          const s2 = getArabicName(sign2);
+          const response = await ai.models.generateContent({
+            model: 'gemini-2.5-flash',
+            contents: `حلل التوافق العاطفي والروحي بين برج ${s1} وبرج ${s2} باللغة العربية.
+            قدم تقريراً شاملاً يغطي: 1. الرابط العاطفي. 2. أسلوب التفاهم. 3. التحديات المحتملة. 4. نسبة توافق تقديرية.
+            اكتب بأسلوب سردي ممتع ومفصل.`,
+          });
+          return response.text || "تقرير التوافق غير متاح.";
+        } catch (error) {
+          console.error("Gemini API Error:", error);
+          return "النجوم لا يمكنها محاذاة هذا الطلب الآن.";
+        }
+      };
+
+      // --- COMPONENTS ---
+
+      const Header = () => {
+        const [currentDate, setCurrentDate] = useState(new Date());
+
+        useEffect(() => {
+          const timer = setInterval(() => setCurrentDate(new Date()), 1000);
+          return () => clearInterval(timer);
+        }, []);
+
+        return (
+          <header className="w-full p-4 md:p-6 border-b border-indigo-500/30 bg-indigo-950/20 backdrop-blur-md sticky top-0 z-50">
+            <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+              <div className="flex items-center gap-3 group">
+                <div className="relative">
+                  <Moon className="text-cosmic-gold w-8 h-8 md:w-10 md:h-10 animate-pulse-slow" />
+                  <Sparkles className="absolute -top-1 -right-1 text-white w-4 h-4 animate-spin-slow" />
+                </div>
+                <div>
+                  <h1 className="text-2xl md:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-l from-cosmic-gold to-white tracking-wide font-serif">
+                    القدر الكوني
+                  </h1>
+                  <p className="text-xs text-indigo-300 opacity-80">بوابتك لعالم الأبراج</p>
+                </div>
+              </div>
+              <div className="flex flex-col items-center md:items-end bg-white/5 px-4 py-2 rounded-xl border border-white/10 shadow-lg">
+                <div className="text-sm font-medium text-cosmic-gold tracking-wide">
+                  {currentDate.toLocaleDateString('ar-EG', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+                </div>
+                <div className="text-xl md:text-2xl font-mono text-white font-bold tabular-nums" dir="ltr">
+                  {currentDate.toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
+                </div>
+              </div>
+            </div>
+          </header>
+        );
+      };
+
+      const Footer = () => {
+        return (
+          <footer className="w-full p-6 mt-12 border-t border-indigo-900/50 bg-slate-950/80 backdrop-blur-sm text-center relative z-10">
+            <p className="text-indigo-200 font-medium text-lg tracking-wide dir-ltr">
+              Developed by <span className="text-cosmic-gold font-bold">Programmer Amir Lamay</span>
+            </p>
+          </footer>
+        );
+      };
+
+      const App = () => {
+        const [activeTab, setActiveTab] = useState(Tab.FindSign);
+        const [dob, setDob] = useState('');
+        const [foundSign, setFoundSign] = useState(null);
+        const [ageResult, setAgeResult] = useState(null);
+        const [selectedDetailSign, setSelectedDetailSign] = useState(ZodiacSign.Aries);
+        const [detailContent, setDetailContent] = useState('');
+        const [loadingDetails, setLoadingDetails] = useState(false);
+        const [signA, setSignA] = useState(ZodiacSign.Aries);
+        const [signB, setSignB] = useState(ZodiacSign.Leo);
+        const [compatibilityReport, setCompatibilityReport] = useState('');
+        const [loadingMatch, setLoadingMatch] = useState(false);
+        const [horoscopeSign, setHoroscopeSign] = useState(ZodiacSign.Aries);
+        const [horoscopeText, setHoroscopeText] = useState('');
+        const [loadingHoroscope, setLoadingHoroscope] = useState(false);
+
+        const getArabicSignName = (sign) => ZODIAC_DATA.find(z => z.name === sign)?.arabicName || sign;
+        const getArabicElement = (sign) => ZODIAC_DATA.find(z => z.name === sign)?.arabicElement || '';
+
+        const handleFindSign = () => {
+          if (!dob) return;
+          const date = new Date(dob);
+          setFoundSign(getZodiacSign(date));
+        };
+
+        const handleFetchDetails = async () => {
+          setLoadingDetails(true);
+          setDetailContent('');
+          const text = await getDeepSignAnalysis(selectedDetailSign);
+          setDetailContent(text);
+          setLoadingDetails(false);
+        };
+
+        const handleFetchCompatibility = async () => {
+          setLoadingMatch(true);
+          setCompatibilityReport('');
+          const text = await getCompatibilityReport(signA, signB);
+          setCompatibilityReport(text);
+          setLoadingMatch(false);
+        };
+
+        const handleFetchHoroscope = async () => {
+          setLoadingHoroscope(true);
+          setHoroscopeText('');
+          const text = await getDailyHoroscope(horoscopeSign);
+          setHoroscopeText(text);
+          setLoadingHoroscope(false);
+        };
+
+        const handleCalculateAge = () => {
+          if (!dob) return;
+          setAgeResult(calculateAge(new Date(dob)));
+        };
+
+        const TabButton = ({ tab, label, icon }) => (
+          <button
+            onClick={() => setActiveTab(tab)}
+            className={`glass-button flex flex-col items-center justify-center p-4 rounded-2xl transition-all duration-500 w-full md:w-auto flex-1 relative overflow-hidden group border
+              ${activeTab === tab 
+                ? 'bg-indigo-600/30 text-white shadow-[0_0_20px_rgba(99,102,241,0.4)] border-indigo-400' 
+                : 'border-white/5 text-indigo-300 hover:text-white hover:bg-white/5'
+              }`}
+          >
+            <div className={`mb-2 transition-transform duration-500 ${activeTab === tab ? 'scale-110 -translate-y-1' : 'group-hover:scale-110'}`}>
+              {icon}
+            </div>
+            <span className="text-xs md:text-sm font-bold tracking-wide">{label}</span>
+            {activeTab === tab && (
+              <div className="absolute inset-0 bg-gradient-to-t from-indigo-500/20 to-transparent pointer-events-none animate-pulse"></div>
+            )}
+          </button>
+        );
+
+        return (
+          <div className="min-h-screen text-slate-100 font-sans selection:bg-cosmic-gold selection:text-black dir-rtl relative">
+            <Header />
+            <main className="max-w-6xl mx-auto px-4 py-8 pb-20 relative z-10">
+              
+              <nav className="flex flex-wrap md:flex-nowrap gap-4 mb-12 overflow-x-auto pb-4 scrollbar-hide px-2">
+                <TabButton tab={Tab.FindSign} label="اكتشف برجك" icon={<Search className="w-6 h-6" />} />
+                <TabButton tab={Tab.Details} label="صفات البرج" icon={<Info className="w-6 h-6" />} />
+                <TabButton tab={Tab.Compatibility} label="توافق الأبراج" icon={<Heart className="w-6 h-6" />} />
+                <TabButton tab={Tab.Horoscope} label="حظك اليوم" icon={<Star className="w-6 h-6" />} />
+                <TabButton tab={Tab.Age} label="حساب العمر" icon={<Calendar className="w-6 h-6" />} />
+              </nav>
+
+              <div className="glass-panel p-6 md:p-12 rounded-[2.5rem] shadow-2xl min-h-[600px] relative overflow-hidden backdrop-blur-xl border border-white/10">
+                
+                <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-indigo-600/10 rounded-full blur-[120px] -z-10 animate-pulse-slow"></div>
+                <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-purple-600/10 rounded-full blur-[100px] -z-10 animate-pulse-slow" style={{animationDelay: '2s'}}></div>
+                <div className="absolute top-10 left-10 w-24 h-24 rounded-full border border-white/5 opacity-50 animate-float"></div>
+                <div className="absolute bottom-20 right-20 w-32 h-32 rounded-full border border-white/5 opacity-30 animate-float" style={{animationDelay: '1s'}}></div>
+
+                {activeTab === Tab.FindSign && (
+                  <div className="flex flex-col items-center justify-center space-y-12 animate-[fadeIn_0.6s_ease-out] py-10">
+                    <div className="text-center relative">
+                      <div className="absolute -top-10 left-1/2 -translate-x-1/2 w-32 h-32 bg-cosmic-gold/10 blur-[50px] rounded-full"></div>
+                      <h2 className="text-4xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-b from-cosmic-gold to-orange-200 mb-4 drop-shadow-sm relative">من أنت فلكياً؟</h2>
+                      <p className="text-indigo-200 text-xl font-light">أدخل تاريخ ميلادك لنكشف لك عن حارسك السماوي</p>
+                    </div>
+                    
+                    <div className="flex flex-col sm:flex-row gap-4 w-full max-w-lg glass-panel p-3 rounded-2xl border border-white/10 shadow-lg">
+                      <input 
+                        type="date" 
+                        value={dob}
+                        onChange={(e) => setDob(e.target.value)}
+                        className="bg-transparent border-none text-white focus:ring-0 w-full text-center px-4 py-3 text-lg outline-none placeholder-indigo-400/50"
+                        style={{ colorScheme: 'dark' }}
+                      />
+                      <button 
+                        onClick={handleFindSign}
+                        className="bg-gradient-to-l from-cosmic-gold to-amber-500 hover:from-amber-400 hover:to-orange-500 text-slate-900 font-bold py-3 px-8 rounded-xl transition-all shadow-lg whitespace-nowrap transform hover:scale-[1.02] active:scale-95"
+                      >
+                        اظهر النتيجة
+                      </button>
+                    </div>
+
+                    {foundSign && (
+                      <div className="mt-8 text-center relative group w-full max-w-md">
+                        <div className="absolute inset-0 bg-gradient-to-t from-cosmic-gold/20 to-transparent blur-2xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+                        <div className="relative glass-panel p-10 rounded-3xl border border-white/20 backdrop-blur-2xl transform transition-all hover:-translate-y-2">
+                          <div className="text-indigo-300 uppercase tracking-widest text-sm mb-4 font-semibold">برجك هو</div>
+                          <div className="text-6xl md:text-8xl font-bold text-white mb-6 drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]">
+                            {getArabicSignName(foundSign)}
+                          </div>
+                          <div className="inline-flex items-center gap-3 bg-white/5 px-6 py-2 rounded-full text-indigo-100 text-lg border border-white/10">
+                            <span>العنصر:</span>
+                            <span className="font-bold text-cosmic-gold">{getArabicElement(foundSign)}</span>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {activeTab === Tab.Details && (
+                  <div className="space-y-10 animate-[fadeIn_0.6s_ease-out]">
+                    <div className="text-center mb-8">
+                      <h2 className="text-3xl md:text-4xl font-bold text-white flex items-center justify-center gap-4">
+                        <MoonStar className="w-8 h-8 text-cosmic-gold" />
+                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-200 to-white">تحليل الشخصية العميق</span>
+                      </h2>
+                      <p className="text-indigo-300 mt-3 text-lg font-light">اكتشف أسرار النجوم وخبايا شخصيتك</p>
+                    </div>
+
+                    <div className="flex flex-col md:flex-row items-center justify-center gap-4 mb-8 glass-panel p-2 rounded-2xl max-w-2xl mx-auto">
+                      <select 
+                        value={selectedDetailSign}
+                        onChange={(e) => {
+                          setSelectedDetailSign(e.target.value);
+                          setDetailContent(''); 
+                        }}
+                        className="bg-transparent border-none rounded-xl px-6 py-3 text-white focus:ring-0 text-lg w-full md:w-auto text-right appearance-none cursor-pointer hover:bg-white/5 transition-colors"
+                      >
+                        {ZODIAC_DATA.map(sign => (
+                          <option key={sign.name} value={sign.name} className="bg-slate-900 text-white">{sign.arabicName}</option>
+                        ))}
+                      </select>
+                      <div className="h-8 w-px bg-white/10 hidden md:block"></div>
+                      <button 
+                        onClick={handleFetchDetails}
+                        disabled={loadingDetails}
+                        className="bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 px-10 rounded-xl transition-all shadow-lg flex items-center justify-center gap-3 w-full md:w-auto disabled:opacity-50 disabled:cursor-not-allowed min-w-[160px]"
+                      >
+                        {loadingDetails ? <Loader2 className="animate-spin w-5 h-5" /> : 'حلل الشخصية'}
+                      </button>
+                    </div>
+
+                    {detailContent && (
+                      <div className="glass-panel p-8 md:p-10 rounded-3xl border border-white/10 shadow-2xl max-w-4xl mx-auto relative overflow-hidden">
+                         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-cosmic-gold to-transparent opacity-50"></div>
+                         <h3 className="text-2xl font-bold text-white mb-8 flex items-center gap-3">
+                           <div className="p-2 bg-cosmic-gold/20 rounded-lg">
+                              <Sparkles className="w-6 h-6 text-cosmic-gold" />
+                           </div>
+                           تحليل برج {getArabicSignName(selectedDetailSign)}
+                         </h3>
+                         <div className="prose prose-lg prose-invert max-w-none text-indigo-100 leading-loose text-right whitespace-pre-line font-medium opacity-90">
+                           {detailContent}
+                         </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {activeTab === Tab.Compatibility && (
+                  <div className="space-y-12 animate-[fadeIn_0.6s_ease-out]">
+                    <div className="text-center">
+                      <h2 className="text-4xl md:text-5xl font-bold text-pink-300 drop-shadow-md">مقياس التوافق الفلكي</h2>
+                      <p className="text-indigo-200 mt-4 text-xl font-light">هل النجوم تدعم هذه العلاقة؟</p>
+                    </div>
+
+                    <div className="flex flex-col md:flex-row items-center justify-center gap-12 p-8 md:p-12 glass-panel rounded-[2rem] max-w-4xl mx-auto relative">
+                      <div className="w-full md:w-1/3 text-center z-10">
+                        <label className="block text-indigo-300 text-sm font-bold mb-4 uppercase tracking-wider">الطرف الأول</label>
+                        <div className="relative group">
+                          <select 
+                              value={signA} 
+                              onChange={(e) => setSignA(e.target.value)}
+                              className="w-full bg-slate-900/50 border border-indigo-500/30 hover:border-pink-500/50 rounded-2xl p-4 text-white text-xl text-center appearance-none transition-colors cursor-pointer"
+                          >
+                              {ZODIAC_DATA.map(s => <option key={s.name} value={s.name} className="bg-slate-900">{s.arabicName}</option>)}
+                          </select>
+                          <div className="absolute inset-0 border border-white/10 rounded-2xl pointer-events-none"></div>
+                        </div>
+                      </div>
+
+                      <div className="relative z-10 -my-6 md:my-0">
+                         <div className="absolute inset-0 bg-pink-500/20 blur-2xl rounded-full animate-pulse"></div>
+                         <div className="relative bg-slate-900/50 p-4 rounded-full border border-pink-500/30 backdrop-blur-md">
+                            <Heart className="w-12 h-12 text-pink-500 fill-pink-500 animate-pulse" />
+                         </div>
+                      </div>
+
+                      <div className="w-full md:w-1/3 text-center z-10">
+                        <label className="block text-indigo-300 text-sm font-bold mb-4 uppercase tracking-wider">الطرف الثاني</label>
+                        <div className="relative group">
+                          <select 
+                              value={signB} 
+                              onChange={(e) => setSignB(e.target.value)}
+                              className="w-full bg-slate-900/50 border border-indigo-500/30 hover:border-pink-500/50 rounded-2xl p-4 text-white text-xl text-center appearance-none transition-colors cursor-pointer"
+                          >
+                              {ZODIAC_DATA.map(s => <option key={s.name} value={s.name} className="bg-slate-900">{s.arabicName}</option>)}
+                          </select>
+                          <div className="absolute inset-0 border border-white/10 rounded-2xl pointer-events-none"></div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="text-center">
+                      <button 
+                        onClick={handleFetchCompatibility}
+                        disabled={loadingMatch}
+                        className="bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-500 hover:to-purple-500 text-white font-bold py-4 px-16 rounded-2xl transition-all shadow-[0_0_30px_rgba(236,72,153,0.3)] transform hover:-translate-y-1 hover:scale-105 disabled:opacity-50 text-lg"
+                      >
+                         {loadingMatch ? <span className="flex items-center gap-2"><Loader2 className="animate-spin" /> جاري قراءة النجوم...</span> : 'احسب نسبة التوافق'}
+                      </button>
+                    </div>
+
+                    {compatibilityReport && (
+                      <div className="mt-8 glass-panel p-8 rounded-3xl border border-pink-500/20 max-w-3xl mx-auto relative overflow-hidden animate-[slideUp_0.5s_ease-out]">
+                        <div className="absolute top-0 right-0 w-2 h-full bg-gradient-to-b from-pink-500 via-purple-500 to-indigo-500 opacity-80"></div>
+                        <h3 className="text-2xl font-bold text-pink-200 mb-6 border-b border-pink-500/20 pb-4">
+                          تقرير {getArabicSignName(signA)} و {getArabicSignName(signB)}
+                        </h3>
+                        <div className="prose prose-invert max-w-none text-indigo-50 leading-loose whitespace-pre-line text-lg font-medium">
+                          {compatibilityReport}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {activeTab === Tab.Horoscope && (
+                  <div className="flex flex-col items-center space-y-12 animate-[fadeIn_0.6s_ease-out] py-8">
+                    <div className="text-center">
+                      <h2 className="text-4xl md:text-5xl font-bold text-cosmic-gold mb-4 drop-shadow-md">حظك اليوم</h2>
+                      <p className="text-indigo-200 text-xl font-light">رسالة من الكون ليوم <span className="font-bold text-white">{new Date().toLocaleDateString('ar-EG')}</span></p>
+                    </div>
+
+                    <div className="w-full max-w-md relative group">
+                      <div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none z-10">
+                        <Star className="h-6 w-6 text-cosmic-gold animate-pulse" />
+                      </div>
+                      <select 
+                        value={horoscopeSign}
+                        onChange={(e) => {
+                          setHoroscopeSign(e.target.value);
+                          setHoroscopeText('');
+                        }}
+                        className="w-full bg-slate-900/60 border border-indigo-500/40 rounded-2xl py-5 pl-12 pr-6 text-white text-xl text-right focus:ring-2 focus:ring-cosmic-gold appearance-none shadow-lg transition-all hover:bg-slate-900/80 cursor-pointer"
+                      >
+                        {ZODIAC_DATA.map(s => <option key={s.name} value={s.name} className="bg-slate-900">{s.arabicName}</option>)}
+                      </select>
+                      <div className="absolute inset-0 rounded-2xl ring-1 ring-white/10 pointer-events-none"></div>
+                    </div>
+
+                    <button 
+                      onClick={handleFetchHoroscope}
+                      disabled={loadingHoroscope}
+                      className="group relative px-10 py-4 bg-transparent overflow-hidden rounded-xl"
+                    >
+                      <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-cosmic-gold to-yellow-500 opacity-90 transition-all duration-300 group-hover:opacity-100 group-hover:scale-105"></div>
+                      <span className="relative text-slate-900 font-bold text-lg flex items-center gap-2">
+                         {loadingHoroscope ? <Loader2 className="animate-spin w-5 h-5" /> : <Sparkles className="w-5 h-5" />}
+                         {loadingHoroscope ? 'جاري الاتصال بالسماء...' : 'اطلب رسالتك الكونية'}
+                      </span>
+                    </button>
+
+                    {horoscopeText && (
+                      <div className="relative glass-panel p-10 md:p-14 rounded-[2rem] max-w-3xl text-center shadow-2xl animate-[fadeIn_0.8s_ease-out] border-t border-white/20">
+                        <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-slate-900 border-2 border-cosmic-gold rounded-full p-3 shadow-[0_0_20px_rgba(251,191,36,0.3)]">
+                          <Sparkles className="w-8 h-8 text-cosmic-gold animate-pulse-slow" />
+                        </div>
+                        
+                        <div className="mb-6 opacity-50">
+                           <div className="mx-auto w-12 h-1 bg-gradient-to-r from-transparent via-cosmic-gold to-transparent"></div>
+                        </div>
+
+                        <p className="text-xl md:text-2xl text-white leading-relaxed font-serif font-medium drop-shadow-sm">
+                          "{horoscopeText}"
+                        </p>
+                        
+                        <div className="mt-8 pt-6 border-t border-white/5 text-sm text-cosmic-gold/80 flex items-center justify-center gap-2">
+                          <Star className="w-4 h-4" />
+                          تم التحليل باستخدام الذكاء الاصطناعي بناءً على إحداثيات اليوم
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {activeTab === Tab.Age && (
+                  <div className="flex flex-col items-center justify-center space-y-12 animate-[fadeIn_0.6s_ease-out] py-10">
+                    <div className="text-center">
+                      <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">آلة الزمن</h2>
+                      <p className="text-indigo-200 text-xl font-light">احسب دقات قلبك مع الزمن</p>
+                    </div>
+
+                    <div className="flex flex-col sm:flex-row gap-4 w-full max-w-lg glass-panel p-4 rounded-2xl border border-white/10 shadow-lg">
+                      <input 
+                        type="date" 
+                        value={dob}
+                        onChange={(e) => setDob(e.target.value)}
+                        className="bg-transparent border border-white/10 rounded-xl px-6 py-3 text-white w-full text-center outline-none focus:border-cosmic-gold/50 transition-colors"
+                        style={{ colorScheme: 'dark' }}
+                      />
+                      <button 
+                        onClick={handleCalculateAge}
+                        className="bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 px-8 rounded-xl transition-all shadow-lg whitespace-nowrap min-w-[120px]"
+                      >
+                        احسب
+                      </button>
+                    </div>
+
+                    {ageResult && (
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-3xl mt-8">
+                        <div className="glass-panel p-8 rounded-3xl text-center group hover:bg-white/5 transition-all duration-300 border border-white/5 hover:border-white/20">
+                          <div className="text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-b from-white to-indigo-300 mb-2 drop-shadow-sm">{ageResult.years}</div>
+                          <div className="text-lg text-indigo-300 font-bold uppercase tracking-wider group-hover:text-white transition-colors">سنة</div>
+                        </div>
+                        <div className="glass-panel p-8 rounded-3xl text-center group hover:bg-white/5 transition-all duration-300 border border-white/5 hover:border-white/20">
+                          <div className="text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-b from-white to-indigo-300 mb-2 drop-shadow-sm">{ageResult.months}</div>
+                          <div className="text-lg text-indigo-300 font-bold uppercase tracking-wider group-hover:text-white transition-colors">شهر</div>
+                        </div>
+                        <div className="glass-panel p-8 rounded-3xl text-center group hover:bg-white/5 transition-all duration-300 border border-white/5 hover:border-white/20">
+                          <div className="text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-b from-white to-indigo-300 mb-2 drop-shadow-sm">{ageResult.days}</div>
+                          <div className="text-lg text-indigo-300 font-bold uppercase tracking-wider group-hover:text-white transition-colors">يوم</div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            </main>
+            <Footer />
+          </div>
+        );
+      };
+
+      const root = createRoot(document.getElementById('root'));
+      root.render(<App />);
+    </script>
+</body>
 </html>
